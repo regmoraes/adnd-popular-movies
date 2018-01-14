@@ -1,22 +1,20 @@
 package com.regmoraes.popularmovies.presentation.detail;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.regmoraes.popularmovies.PopularMoviesApplication;
 import com.regmoraes.popularmovies.R;
 import com.regmoraes.popularmovies.data.model.Movie;
 import com.squareup.picasso.Picasso;
 
-import javax.inject.Inject;
-
 public final class MovieDetailsActivity extends AppCompatActivity implements MovieDetailsContract.View{
 
-    private MoviesDetailsComponent movieDetailsComponent;
+    private MovieDetailsViewModel movieDetailsViewModel;
 
     private ImageView mMoviePoster;
     private TextView mMovieOriginalTitleTextView;
@@ -24,14 +22,8 @@ public final class MovieDetailsActivity extends AppCompatActivity implements Mov
     private TextView mMovieReleaseDateTextView;
     private TextView mMovieRatingTextView;
 
-    @Inject public MovieDetailsContract.Presenter presenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        movieDetailsComponent = ((PopularMoviesApplication) getApplication()).getApplicationComponent().movieDetailsComponent();
-        movieDetailsComponent.inject(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
@@ -42,16 +34,21 @@ public final class MovieDetailsActivity extends AppCompatActivity implements Mov
         mMovieOverviewTextView = findViewById(R.id.tv_movie_overview);
 
         Intent receivedIntent = getIntent();
-
         if(receivedIntent != null) {
             if (receivedIntent.hasExtra(Movie.class.getSimpleName())) {
 
                 Movie movie = receivedIntent.getParcelableExtra(Movie.class.getSimpleName());
 
-                presenter.attachView(this);
-                presenter.loadMovieDetails(movie);
+                MovieDetailsViewModelFactory movieDetailsViewModelFactory = new MovieDetailsViewModelFactory(movie);
+                movieDetailsViewModel = ViewModelProviders.of(this, movieDetailsViewModelFactory).get(MovieDetailsViewModel.class);
             }
         }
+
+        setUpObservers();
+    }
+
+    private void setUpObservers() {
+        movieDetailsViewModel.getMovie().observe(this, this::showMovieDetails);
     }
 
     @Override
@@ -68,11 +65,5 @@ public final class MovieDetailsActivity extends AppCompatActivity implements Mov
         mMovieOriginalTitleTextView.setText(String.format(getString(R.string.movie_original_title), movie.getOriginalTitle()));
         mMovieReleaseDateTextView.setText(String.format(getString(R.string.movie_release_date), movie.getReleaseDate()));
         mMovieRatingTextView.setText(String.format(getString(R.string.movie_rating), String.valueOf(movie.getVoteAverage())));
-    }
-
-    @Override
-    protected void onDestroy() {
-        movieDetailsComponent = null;
-        super.onDestroy();
     }
 }
