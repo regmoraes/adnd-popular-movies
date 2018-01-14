@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".presentation.home.MoviesListActivity">
+        <activity android:name=".presentation.home.MoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
         <activity android:name=".presentation.detail.MovieDetailsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".presentation.home.MoviesListActivity" />
+                android:value=".presentation.home.MoviesActivity" />
         </activity>
     </application>
 

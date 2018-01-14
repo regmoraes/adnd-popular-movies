@@ -1,11 +1,13 @@
 package com.regmoraes.popularmovies.presentation.home;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +24,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public final class MoviesListActivity extends AppCompatActivity implements MoviesListContract.View, MoviesAdapter.MoviesClickListener, PopupMenu.OnMenuItemClickListener {
+public final class MoviesActivity extends AppCompatActivity implements MoviesListContract.View, MoviesAdapter.MoviesClickListener, PopupMenu.OnMenuItemClickListener {
+
+    private MoviesViewModel moviesViewModel;
 
     private MoviesListComponent moviesListComponent;
     private RecyclerView mMoviesRecyclerView;
@@ -30,7 +34,7 @@ public final class MoviesListActivity extends AppCompatActivity implements Movie
     private MoviesAdapter mMoviesAdapter;
     private ProgressBar mLoadingProgress;
 
-    @Inject public MoviesListContract.Presenter presenter;
+    @Inject public MoviesViewModelFactory moviesViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,35 @@ public final class MoviesListActivity extends AppCompatActivity implements Movie
 
         mLoadingErrorTextView = findViewById(R.id.tv_movies_load_error);
 
-        presenter.attachView(this);
-        presenter.loadMovies();
+        moviesViewModel = ViewModelProviders.of(this, moviesViewModelFactory).get(MoviesViewModel.class);
+
+        setUpObservers();
+    }
+
+    private void setUpObservers() {
+
+        moviesViewModel.getMoviesResponse().observe(this, moviesResponse -> {
+
+            switch (moviesResponse.getStatus()) {
+
+                case LOADING:
+                    Log.d(this.getClass().getSimpleName(), "LOADING DATA");
+                    showMoviesLoading();
+                    break;
+
+                case SUCCESS:
+                    Log.d(this.getClass().getSimpleName(), "DATA LOADED");
+                    showMovies(moviesResponse.getData());
+                    break;
+
+                case ERROR:
+                    Log.d(this.getClass().getSimpleName(), "ERROR LOADING DATA");
+                    showMoviesLoadError();
+                    break;
+            }
+        });
+
+        moviesViewModel.getMovie().observe(this, this::showMovieDetails);
     }
 
     @Override
@@ -100,7 +131,7 @@ public final class MoviesListActivity extends AppCompatActivity implements Movie
 
     @Override
     public void onMovieClicked(Movie movie) {
-        presenter.onMovieClicked(movie);
+        moviesViewModel.onMovieClicked(movie);
     }
 
     @Override
@@ -115,15 +146,14 @@ public final class MoviesListActivity extends AppCompatActivity implements Movie
         int clickedItemId = item.getItemId();
 
         if(clickedItemId == R.id.action_sort) {
-            presenter.onSortByClicked();
+            showSortingOptions();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public void showSortingOptions() {
+    private void showSortingOptions() {
 
         View anchorView = findViewById(R.id.action_sort);
 
@@ -144,11 +174,11 @@ public final class MoviesListActivity extends AppCompatActivity implements Movie
         switch(clickedItemId) {
 
             case R.id.action_sort_rating:
-                presenter.onSortByRatingClicked();
+                moviesViewModel.sortByRating();
                 break;
 
             case R.id.action_sort_popularity:
-                presenter.onSortByPopularityClicked();
+                moviesViewModel.sortByPopularity();
                 break;
 
             default:break;

@@ -11,5 +11,5 @@ import dagger.Subcomponent;
 @Subcomponent(modules = {MoviesListPresentationModule.class})
 public interface MoviesListComponent {
 
-    void inject(MoviesListActivity moviesListActivity);
+    void inject(MoviesActivity moviesListActivity);
 }

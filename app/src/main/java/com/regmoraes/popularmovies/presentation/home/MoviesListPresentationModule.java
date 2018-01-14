@@ -14,8 +14,8 @@ public final class MoviesListPresentationModule {
 
     @Provides
     @PresentationScope
-    public MoviesListContract.Presenter providesPresenter(PopularMoviesServices popularMoviesServices) {
+    public MoviesViewModelFactory providesPresenter(PopularMoviesServices popularMoviesServices) {
 
-        return new MoviesListPresenter(popularMoviesServices);
+        return new MoviesViewModelFactory(popularMoviesServices);
     }
 }

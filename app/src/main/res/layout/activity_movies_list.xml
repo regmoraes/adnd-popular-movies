@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.regmoraes.popularmovies.presentation.home.MoviesListActivity">
+    tools:context="com.regmoraes.popularmovies.presentation.home.MoviesActivity">
 
     <ProgressBar
         android:id="@+id/pb_movies_loading"

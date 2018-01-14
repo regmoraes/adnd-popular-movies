@@ -1,7 +1,10 @@
 package com.regmoraes.popularmovies.presentation.home;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.regmoraes.popularmovies.commons.Status;
 import com.regmoraes.popularmovies.data.model.Movie;
-import com.regmoraes.popularmovies.presentation.BasePresenter;
 
 import java.util.List;
 
@@ -19,18 +22,37 @@ public interface MoviesListContract {
         void showMoviesLoadError();
 
         void showMovieDetails(Movie movie);
-
-        void showSortingOptions();
     }
 
-    interface Presenter extends BasePresenter<View>, MoviesAdapter.MoviesClickListener {
+    interface ViewModel extends MoviesAdapter.MoviesClickListener {
 
-        void loadMovies();
+        void sortByRating();
 
-        void onSortByClicked();
+        void sortByPopularity();
+    }
 
-        void onSortByRatingClicked();
+    class MoviesResponse {
 
-        void onSortByPopularityClicked();
+        private final Status status;
+        private final List<Movie> data;
+        private Throwable error;
+
+        public MoviesResponse(@NonNull Status status, @Nullable List<Movie> data, @Nullable Throwable error) {
+            this.status = status;
+            this.data = data;
+            this.error = error;
+        }
+
+        public Status getStatus() {
+            return status;
+        }
+
+        public List<Movie> getData() {
+            return data;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
     }
 }
