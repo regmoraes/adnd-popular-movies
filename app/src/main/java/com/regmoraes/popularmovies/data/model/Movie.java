@@ -42,6 +42,16 @@ public class Movie implements Parcelable {
     @Expose(serialize = false)
     private final String releaseDate;
 
+    public Movie(Integer id, Float voteAverage, String title, String posterPath, String originalTitle, String overview, String releaseDate) {
+        this.id = id;
+        this.voteAverage = voteAverage;
+        this.title = title;
+        this.posterPath = posterPath;
+        this.originalTitle = originalTitle;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+    }
+
     protected Movie(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
@@ -111,6 +121,10 @@ public class Movie implements Parcelable {
     }
 
     public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getPosterUrl() {
         URL moviePosterUrl = ApiUtils.buildMoviePosterUrl(posterPath);
         return moviePosterUrl.toString();
     }

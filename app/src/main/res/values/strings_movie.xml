@@ -1,7 +1,13 @@
 <resources>
     <string name="movie_poster_description">Movie poster</string>
+    <string name="movie_video_description">Play icon</string>
+
+    <string name="fragment_movie_summary">Summary</string>
+    <string name="fragment_movie_videos">Videos</string>
+    <string name="fragment_movie_reviews">Reviews</string>
 
     <string name="movie_original_title">Original Title: %1$s</string>
     <string name="movie_release_date">Release Date: %1$s</string>
     <string name="movie_rating">Rating: %1$s</string>
+
 </resources>

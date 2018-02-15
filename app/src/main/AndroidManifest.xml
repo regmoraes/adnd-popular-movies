@@ -15,19 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".presentation.home.MoviesActivity">
+        <activity
+            android:name=".presentation.home.MoviesActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.detail.MovieDetailsActivity">
+        <activity
+            android:name=".presentation.detail.MovieDetailsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".presentation.home.MoviesActivity" />
         </activity>
+
+        <provider
+            android:name=".data.provider.MovieContentProvider"
+            android:authorities="com.regmoraes.popularmovies"
+            android:exported="false"/>
     </application>
 
 </manifest>

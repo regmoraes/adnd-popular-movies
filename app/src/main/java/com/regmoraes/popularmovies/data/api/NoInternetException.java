@@ -1,4 +1,4 @@
-package com.regmoraes.popularmovies.data;
+package com.regmoraes.popularmovies.data.api;
 
 import java.io.IOException;
 

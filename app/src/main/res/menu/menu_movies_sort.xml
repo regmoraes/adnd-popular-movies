@@ -10,4 +10,8 @@
     <item android:id="@+id/action_sort_rating"
         android:title="@string/action_sort_rating"
         app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_sort_favorites"
+        android:title="@string/action_sort_favorites"
+        app:showAsAction="ifRoom"/>
 </menu>

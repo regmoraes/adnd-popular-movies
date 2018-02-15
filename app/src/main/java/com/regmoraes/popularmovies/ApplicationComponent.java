@@ -1,8 +1,9 @@
 package com.regmoraes.popularmovies;
 
-import com.regmoraes.popularmovies.data.NetworkModule;
+import com.regmoraes.popularmovies.data.api.NetworkModule;
 import com.regmoraes.popularmovies.domain.DomainModule;
-import com.regmoraes.popularmovies.presentation.home.MoviesListComponent;
+import com.regmoraes.popularmovies.presentation.detail.MovieDetailsComponent;
+import com.regmoraes.popularmovies.presentation.home.MoviesComponent;
 
 import javax.inject.Singleton;
 
@@ -15,5 +16,6 @@ import dagger.Component;
 @Component(modules = {ApplicationModule.class, DomainModule.class, NetworkModule.class})
 public interface ApplicationComponent {
 
-    MoviesListComponent moviesListComponent();
+    MoviesComponent moviesListComponent();
+    MovieDetailsComponent movieDetailsComponent();
 }

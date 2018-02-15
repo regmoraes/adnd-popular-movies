@@ -1,4 +1,4 @@
-package com.regmoraes.popularmovies.data;
+package com.regmoraes.popularmovies.data.api;
 
 import android.content.Context;
 
@@ -19,9 +19,11 @@ import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 /**
  * Copyright {2018} {Rômulo Eduardo G. Moraes}
@@ -41,6 +43,18 @@ public class NetworkModule {
                 .excludeFieldsWithoutExposeAnnotation()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
+    }
+
+    @Provides
+    @Singleton
+    public HttpLoggingInterceptor providesLoggingInterceptor() {
+
+        HttpLoggingInterceptor loggingInterceptor =
+                new HttpLoggingInterceptor(message -> Timber.tag("OkHttp").d(message));
+
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        return loggingInterceptor;
     }
 
     @Provides
@@ -83,13 +97,15 @@ public class NetworkModule {
     @Provides
     @Singleton
     public OkHttpClient providesOkHttp(@Named(AUTHENTICATION_INTERCEPTOR) Interceptor authenticationInterceptor,
-                                       @Named(CONNECTIVITY_INTERCEPTOR) Interceptor connectivityInterceptor) {
+                                       @Named(CONNECTIVITY_INTERCEPTOR) Interceptor connectivityInterceptor,
+                                       HttpLoggingInterceptor loggingInterceptor) {
 
         return new OkHttpClient.Builder()
                 .readTimeout(1, TimeUnit.MINUTES)
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .addInterceptor(authenticationInterceptor)
                 .addInterceptor(connectivityInterceptor)
+                .addInterceptor(loggingInterceptor)
                 .build();
     }
 

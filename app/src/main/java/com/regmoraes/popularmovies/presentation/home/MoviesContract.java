@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Copyright {2018} {Rômulo Eduardo G. Moraes}
  **/
-public interface MoviesListContract {
+public interface MoviesContract {
 
     interface View {
 
@@ -29,6 +29,8 @@ public interface MoviesListContract {
         void sortByRating();
 
         void sortByPopularity();
+
+        void sortByFavorites();
     }
 
     class MoviesResponse {

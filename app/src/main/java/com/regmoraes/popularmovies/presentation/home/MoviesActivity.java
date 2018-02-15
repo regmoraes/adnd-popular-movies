@@ -2,39 +2,35 @@ package com.regmoraes.popularmovies.presentation.home;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.regmoraes.popularmovies.PopularMoviesApplication;
 import com.regmoraes.popularmovies.R;
 import com.regmoraes.popularmovies.data.model.Movie;
+import com.regmoraes.popularmovies.databinding.ActivityMoviesBinding;
 import com.regmoraes.popularmovies.presentation.detail.MovieDetailsActivity;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public final class MoviesActivity extends AppCompatActivity implements MoviesListContract.View, MoviesAdapter.MoviesClickListener, PopupMenu.OnMenuItemClickListener {
+public final class MoviesActivity extends AppCompatActivity implements MoviesContract.View, MoviesAdapter.MoviesClickListener, PopupMenu.OnMenuItemClickListener {
 
-    private MoviesViewModel moviesViewModel;
+    private MoviesComponent moviesListComponent;
 
-    private MoviesListComponent moviesListComponent;
-    private RecyclerView mMoviesRecyclerView;
-    private TextView mLoadingErrorTextView;
+    @Inject public MoviesViewModelFactory viewModelFactory;
+    private MoviesViewModel viewModel;
+    private ActivityMoviesBinding viewBinding;
+
     private MoviesAdapter mMoviesAdapter;
-    private ProgressBar mLoadingProgress;
-
-    @Inject public MoviesViewModelFactory moviesViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,50 +39,55 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesLis
         moviesListComponent.inject(this);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movies_list);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-
-        mMoviesRecyclerView = findViewById(R.id.recyclerView_movies);
-        mMoviesRecyclerView.setLayoutManager(layoutManager);
-        mMoviesRecyclerView.setHasFixedSize(true);
-
-        mMoviesAdapter = new MoviesAdapter(this);
-        mMoviesRecyclerView.setAdapter(mMoviesAdapter);
-
-        mLoadingProgress = findViewById(R.id.pb_movies_loading);
-
-        mLoadingErrorTextView = findViewById(R.id.tv_movies_load_error);
-
-        moviesViewModel = ViewModelProviders.of(this, moviesViewModelFactory).get(MoviesViewModel.class);
-
-        setUpObservers();
+        setUpView();
+        setUpToolbar();
+        setUpViewModel();
     }
 
-    private void setUpObservers() {
+    private void setUpView() {
 
-        moviesViewModel.getMoviesResponse().observe(this, moviesResponse -> {
+        viewBinding = DataBindingUtil.setContentView(this, R.layout.activity_movies);
 
-            switch (moviesResponse.getStatus()) {
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        viewBinding.recyclerViewMovies.setLayoutManager(layoutManager);
+        viewBinding.recyclerViewMovies.setHasFixedSize(true);
 
-                case LOADING:
-                    Log.d(this.getClass().getSimpleName(), "LOADING DATA");
-                    showMoviesLoading();
-                    break;
+        mMoviesAdapter = new MoviesAdapter(this);
+        viewBinding.recyclerViewMovies.setAdapter(mMoviesAdapter);
+    }
 
-                case SUCCESS:
-                    Log.d(this.getClass().getSimpleName(), "DATA LOADED");
-                    showMovies(moviesResponse.getData());
-                    break;
+    private void setUpToolbar() {
 
-                case ERROR:
-                    Log.d(this.getClass().getSimpleName(), "ERROR LOADING DATA");
-                    showMoviesLoadError();
-                    break;
+        setSupportActionBar(viewBinding.toolbar);
+        getSupportActionBar().setTitle(R.string.app_name);
+    }
+
+    private void setUpViewModel() {
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesViewModel.class);
+
+        viewModel.getMoviesResponse().observe(this, moviesResponse -> {
+
+            if (moviesResponse != null) {
+                switch (moviesResponse.getStatus()) {
+
+                    case LOADING:
+                        showMoviesLoading();
+                        break;
+
+                    case SUCCESS:
+                        showMovies(moviesResponse.getData());
+                        break;
+
+                    case ERROR:
+                        showMoviesLoadError();
+                        break;
+                }
             }
         });
 
-        moviesViewModel.getMovie().observe(this, this::showMovieDetails);
+        viewModel.getMovie().observe(this, this::showMovieDetails);
     }
 
     @Override
@@ -94,10 +95,9 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesLis
 
         mMoviesAdapter.setMovies(null);
 
-        mMoviesRecyclerView.setVisibility(View.INVISIBLE);
-        mLoadingErrorTextView.setVisibility(View.INVISIBLE);
-
-        mLoadingProgress.setVisibility(View.VISIBLE);
+        viewBinding.recyclerViewMovies.setVisibility(View.INVISIBLE);
+        viewBinding.tvMoviesLoadError.setVisibility(View.INVISIBLE);
+        viewBinding.pbMoviesLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -105,9 +105,9 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesLis
 
         mMoviesAdapter.setMovies(movies);
 
-        mMoviesRecyclerView.setVisibility(View.VISIBLE);
-        mLoadingErrorTextView.setVisibility(View.INVISIBLE);
-        mLoadingProgress.setVisibility(View.INVISIBLE);
+        viewBinding.recyclerViewMovies.setVisibility(View.VISIBLE);
+        viewBinding.tvMoviesLoadError.setVisibility(View.INVISIBLE);
+        viewBinding.pbMoviesLoading.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -115,9 +115,9 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesLis
 
         mMoviesAdapter.setMovies(null);
 
-        mMoviesRecyclerView.setVisibility(View.INVISIBLE);
-        mLoadingErrorTextView.setVisibility(View.VISIBLE);
-        mLoadingProgress.setVisibility(View.INVISIBLE);
+        viewBinding.recyclerViewMovies.setVisibility(View.INVISIBLE);
+        viewBinding.tvMoviesLoadError.setVisibility(View.VISIBLE);
+        viewBinding.pbMoviesLoading.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -131,7 +131,7 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesLis
 
     @Override
     public void onMovieClicked(Movie movie) {
-        moviesViewModel.onMovieClicked(movie);
+        viewModel.onMovieClicked(movie);
     }
 
     @Override
@@ -174,11 +174,15 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesLis
         switch(clickedItemId) {
 
             case R.id.action_sort_rating:
-                moviesViewModel.sortByRating();
+                viewModel.sortByRating();
                 break;
 
             case R.id.action_sort_popularity:
-                moviesViewModel.sortByPopularity();
+                viewModel.sortByPopularity();
+                break;
+
+            case R.id.action_sort_favorites:
+                viewModel.sortByFavorites();
                 break;
 
             default:break;

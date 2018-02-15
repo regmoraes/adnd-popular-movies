@@ -1,5 +1,7 @@
 package com.regmoraes.popularmovies.domain;
 
+import android.content.Context;
+
 import com.regmoraes.popularmovies.data.api.ApiModule;
 import com.regmoraes.popularmovies.data.api.MoviesDbRestService;
 
@@ -18,7 +20,12 @@ public class DomainModule {
     @Provides
     @Singleton
     public PopularMoviesServices providesPopularMoviesServices(MoviesDbRestService moviesDbRestService) {
-
         return new PopularMoviesManager(moviesDbRestService);
+    }
+
+    @Provides
+    @Singleton
+    public FavoritesServices providesFavoritesServices(Context context) {
+        return new FavoritesManager(context);
     }
 }

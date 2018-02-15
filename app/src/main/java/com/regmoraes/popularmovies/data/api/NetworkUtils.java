@@ -1,4 +1,4 @@
-package com.regmoraes.popularmovies.data;
+package com.regmoraes.popularmovies.data.api;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

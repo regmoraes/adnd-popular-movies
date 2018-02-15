@@ -20,7 +20,7 @@ public final class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.Movi
     private List<Movie> movies;
     private final MoviesClickListener clickListener;
 
-    MoviesAdapter(MoviesClickListener clickListener) {
+    public MoviesAdapter(MoviesClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -38,7 +38,7 @@ public final class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.Movi
 
         Movie movie = movies.get(position);
 
-        Picasso.with(holder.itemView.getContext()).load(movie.getPosterPath()).into(holder.mMoviePoster);
+        Picasso.with(holder.itemView.getContext()).load(movie.getPosterUrl()).into(holder.mMoviePoster);
     }
 
     @Override

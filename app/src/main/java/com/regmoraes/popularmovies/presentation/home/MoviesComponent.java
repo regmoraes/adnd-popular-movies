@@ -8,8 +8,8 @@ import dagger.Subcomponent;
  * Copyright {2018} {Rômulo Eduardo G. Moraes}
  **/
 @PresentationScope
-@Subcomponent(modules = {MoviesListPresentationModule.class})
-public interface MoviesListComponent {
+@Subcomponent(modules = {MoviesPresentationModule.class})
+public interface MoviesComponent {
 
     void inject(MoviesActivity moviesListActivity);
 }

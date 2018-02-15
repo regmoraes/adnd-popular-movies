@@ -1,8 +1,9 @@
 <resources>
-<string name="action_description_sort">Sort By</string>
-<string name="action_sort_popularity">Popularity</string>
-<string name="action_sort_rating">Rating</string>
+    <string name="action_description_sort">Sort By</string>
+    <string name="action_sort_popularity">Popularity</string>
+    <string name="action_sort_rating">Rating</string>
+    <string name="action_sort_favorites">Favorites</string>
 
-<string name="movies_loading_error">An error occurred while loading movies :(</string>
+    <string name="movies_loading_error">An error occurred while loading movies :(</string>
 </resources>
 
