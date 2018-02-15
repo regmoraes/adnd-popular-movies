@@ -2,6 +2,7 @@ package com.regmoraes.popularmovies.presentation.detail;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.regmoraes.popularmovies.data.model.Video;
@@ -15,6 +16,11 @@ import java.util.List;
 public final class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.VideosAdapterViewHolder> {
 
     private List<Video> videos;
+    private OnVideoClickListener listener;
+
+    public MovieVideosAdapter(OnVideoClickListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public VideosAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,18 +56,30 @@ public final class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAd
         notifyDataSetChanged();
     }
 
-    class VideosAdapterViewHolder extends RecyclerView.ViewHolder {
+    class VideosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private VideoListItemBinding itemBinding;
 
         VideosAdapterViewHolder(VideoListItemBinding itemBinding) {
             super(itemBinding.getRoot());
+
             this.itemBinding = itemBinding;
+            this.itemBinding.getRoot().setOnClickListener(this);
         }
 
         void bind(Video movie) {
             itemBinding.setVideo(movie);
             itemBinding.executePendingBindings();
         }
+
+        @Override
+        public void onClick(View v) {
+            String videoKey = videos.get(getAdapterPosition()).getKey();
+            listener.onVideoClicked(videoKey);
+        }
+    }
+
+    public interface OnVideoClickListener {
+        void onVideoClicked(String videoKey);
     }
 }

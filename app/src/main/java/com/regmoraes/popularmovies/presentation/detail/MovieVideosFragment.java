@@ -1,6 +1,8 @@
 package com.regmoraes.popularmovies.presentation.detail;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +19,9 @@ import com.regmoraes.popularmovies.databinding.FragmentVideosBinding;
 
 import java.util.List;
 
-public final class MovieVideosFragment extends Fragment {
+import static android.content.Intent.ACTION_VIEW;
+
+public final class MovieVideosFragment extends Fragment implements MovieVideosAdapter.OnVideoClickListener {
 
     private MovieDetailsViewModel viewModel;
     private FragmentVideosBinding viewBinding;
@@ -38,7 +42,7 @@ public final class MovieVideosFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        reviewsAdapter = new MovieVideosAdapter();
+        reviewsAdapter = new MovieVideosAdapter(this);
 
         viewBinding.recyclerViewReviews.setLayoutManager(mLayoutManager);
         viewBinding.recyclerViewReviews.setAdapter(reviewsAdapter);
@@ -50,11 +54,35 @@ public final class MovieVideosFragment extends Fragment {
 
         if(getActivity() != null) {
             this.viewModel = ((MovieDetailsActivity) getActivity()).viewModel;
-            viewModel.getObservableVideos().observe(getActivity(), this::setVideoData);
+
+            viewModel.getObservableVideos().observe(getActivity(), this::showVideoData);
+            viewModel.getObservableLoadingVideosError().observe(getActivity(), this::showVideosLoadingError);
+            viewModel.getEventShowVideo().observe(getActivity(), this::showVideo);
         }
     }
 
-    private void setVideoData(List<Video> videos) {
+    private void showVideoData(List<Video> videos) {
         reviewsAdapter.setVideos(videos);
+    }
+
+    private void showVideosLoadingError(Boolean show) {
+        if(show != null) {
+            viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            viewBinding.textViewLoadingError.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
+
+    private void showVideo(Uri videoUri) {
+
+        Intent videoIntent = new Intent();
+        videoIntent.setAction(ACTION_VIEW);
+        videoIntent.setData(videoUri);
+
+        startActivity(videoIntent);
+    }
+
+    @Override
+    public void onVideoClicked(String videoKey) {
+        viewModel.onVideoClicked(videoKey);
     }
 }

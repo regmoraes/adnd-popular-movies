@@ -3,20 +3,25 @@ package com.regmoraes.popularmovies.presentation.detail;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableField;
+import android.net.Uri;
 
+import com.regmoraes.popularmovies.commons.SingleLiveEvent;
+import com.regmoraes.popularmovies.commons.VideoUtils;
+import com.regmoraes.popularmovies.data.api.NoInternetException;
 import com.regmoraes.popularmovies.data.model.Movie;
 import com.regmoraes.popularmovies.data.model.Review;
 import com.regmoraes.popularmovies.data.model.Video;
 import com.regmoraes.popularmovies.domain.FavoritesServices;
 import com.regmoraes.popularmovies.domain.PopularMoviesServices;
 
+import java.net.URL;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public final class MovieDetailsViewModel extends ViewModel {
+public final class MovieDetailsViewModel extends ViewModel implements MovieVideosAdapter.OnVideoClickListener{
 
     private Movie movie;
     private FavoritesServices favoritesServices;
@@ -25,7 +30,12 @@ public final class MovieDetailsViewModel extends ViewModel {
     private final MutableLiveData<Movie> observableMovie = new MutableLiveData<>();
     private final MutableLiveData<List<Video>> observableVideos = new MutableLiveData<>();
     private final MutableLiveData<List<Review>> observableReviews = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> observableLoadingVideosError = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> observableLoadingReviewsError = new MutableLiveData<>();
+
     private final ObservableField<Boolean> fieldIsFavorite = new ObservableField<>();
+
+    private final SingleLiveEvent<Uri> eventShowVideo = new SingleLiveEvent<>();
 
     public MutableLiveData<Movie> getObservableMovie() {
         return observableMovie;
@@ -39,8 +49,20 @@ public final class MovieDetailsViewModel extends ViewModel {
         return observableReviews;
     }
 
+    public MutableLiveData<Boolean> getObservableLoadingVideosError() {
+        return observableLoadingVideosError;
+    }
+
+    public MutableLiveData<Boolean> getObservableLoadingReviewsError() {
+        return observableLoadingReviewsError;
+    }
+
     public ObservableField<Boolean> getFieldIsFavorite() {
         return fieldIsFavorite;
+    }
+
+    public SingleLiveEvent<Uri> getEventShowVideo() {
+        return eventShowVideo;
     }
 
     private CompositeDisposable disposables = new CompositeDisposable();
@@ -66,7 +88,18 @@ public final class MovieDetailsViewModel extends ViewModel {
                     popularMoviesServices.findReviews(movie.getId())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(observableReviews::setValue)
+                            .subscribe(
+                                    reviews -> {
+                                        observableReviews.setValue(reviews);
+                                        observableLoadingReviewsError.setValue(false);
+                                    },
+                                    error -> {
+                                        if(error instanceof NoInternetException) {
+                                            observableReviews.setValue(null);
+                                            observableLoadingReviewsError.setValue(true);
+                                        }
+                                    }
+                            )
             );
         }
     }
@@ -78,7 +111,18 @@ public final class MovieDetailsViewModel extends ViewModel {
                     popularMoviesServices.findVideos(movie.getId())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(observableVideos::setValue)
+                            .subscribe(
+                                    videos -> {
+                                        observableVideos.setValue(videos);
+                                        observableLoadingVideosError.setValue(false);
+                                    },
+                                    error -> {
+                                        if(error instanceof NoInternetException) {
+                                            observableVideos.setValue(null);
+                                            observableLoadingVideosError.setValue(true);
+                                        }
+                                    }
+                            )
             );
         }
     }
@@ -117,6 +161,14 @@ public final class MovieDetailsViewModel extends ViewModel {
                 );
             }
         }
+    }
+
+    @Override
+    public void onVideoClicked(String videoKey) {
+
+        Uri videoUri = VideoUtils.buildVideoUri(videoKey);
+
+        eventShowVideo.setValue(videoUri);
     }
 
     @Override

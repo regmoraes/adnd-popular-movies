@@ -16,9 +16,14 @@ public class Video {
     @Expose(serialize = false)
     private String name;
 
-    public Video(String id, String name) {
+    @SerializedName("key")
+    @Expose(serialize = false)
+    private String key;
+
+    public Video(String id, String name, String key) {
         this.id = id;
         this.name = name;
+        this.key = key;
     }
 
     public String getId() {
@@ -27,5 +32,9 @@ public class Video {
 
     public String getName() {
         return name;
+    }
+
+    public String getKey() {
+        return key;
     }
 }

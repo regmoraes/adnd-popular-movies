@@ -49,12 +49,22 @@ public final class MovieReviewsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if(getActivity() != null) {
+
             this.viewModel = ((MovieDetailsActivity) getActivity()).viewModel;
-            viewModel.getObservableReviews().observe(getActivity(), this::setReviewData);
+
+            viewModel.getObservableReviews().observe(getActivity(), this::showReviewData);
+            viewModel.getObservableLoadingReviewsError().observe(getActivity(), this::showReviewsLoadingError);
         }
     }
 
-    private void setReviewData(List<Review> reviews) {
+    private void showReviewData(List<Review> reviews) {
         reviewsAdapter.setReviews(reviews);
+    }
+
+    private void showReviewsLoadingError(Boolean show) {
+        if(show != null) {
+            viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            viewBinding.textViewLoadingError.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 }
