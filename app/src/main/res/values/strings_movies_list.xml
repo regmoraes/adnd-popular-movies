@@ -4,6 +4,9 @@
     <string name="action_sort_rating">Rating</string>
     <string name="action_sort_favorites">Favorites</string>
 
+    <string name="movies_most_popular">Most Popular</string>
+    <string name="movies_favorites">My Favorites</string>
+    <string name="movies_top_rated">Top Rated</string>
     <string name="movies_loading_error">An error occurred while loading movies :(</string>
 </resources>
 

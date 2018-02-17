@@ -10,7 +10,13 @@
     <string name="movie_release_date">Release Date: %1$s</string>
     <string name="movie_rating">Rating: %1$s</string>
 
+    <string name="movie_added_favorites">Added to favorites</string>
+    <string name="movie_removed_favorites">Removed from favorites</string>
+
+    <string name="reviews_no_review">There\'s no reviews for this movie.</string>
     <string name="reviews_loading_error">Connect to the internet to see the reviews.</string>
+
+    <string name="videos_no_videos">There\'s no videos for this movie.</string>
     <string name="videos_loading_error">Connect to the internet to see the videos.</string>
 
 </resources>

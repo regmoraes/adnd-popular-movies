@@ -54,6 +54,7 @@ public final class MovieReviewsFragment extends Fragment {
 
             viewModel.getObservableReviews().observe(getActivity(), this::showReviewData);
             viewModel.getObservableLoadingReviewsError().observe(getActivity(), this::showReviewsLoadingError);
+            viewModel.getObservableNoReviewsAvailable().observe(getActivity(), this::showNoReviewsAvailable);
         }
     }
 
@@ -64,7 +65,16 @@ public final class MovieReviewsFragment extends Fragment {
     private void showReviewsLoadingError(Boolean show) {
         if(show != null) {
             viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
-            viewBinding.textViewLoadingError.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            viewBinding.textViewLoadFeedback.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            viewBinding.textViewLoadFeedback.setText(R.string.reviews_loading_error);
+        }
+    }
+
+    private void showNoReviewsAvailable(Boolean show) {
+        if(show != null) {
+            viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            viewBinding.textViewLoadFeedback.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            viewBinding.textViewLoadFeedback.setText(R.string.reviews_no_review);
         }
     }
 }

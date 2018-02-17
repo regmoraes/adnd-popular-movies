@@ -68,7 +68,7 @@ public final class MovieVideosFragment extends Fragment implements MovieVideosAd
     private void showVideosLoadingError(Boolean show) {
         if(show != null) {
             viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
-            viewBinding.textViewLoadingError.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            viewBinding.textViewLoadFeedback.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         }
     }
 

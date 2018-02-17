@@ -14,7 +14,6 @@ import com.regmoraes.popularmovies.data.model.Video;
 import com.regmoraes.popularmovies.domain.FavoritesServices;
 import com.regmoraes.popularmovies.domain.PopularMoviesServices;
 
-import java.net.URL;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,14 +27,18 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
     private PopularMoviesServices popularMoviesServices;
 
     private final MutableLiveData<Movie> observableMovie = new MutableLiveData<>();
+
     private final MutableLiveData<List<Video>> observableVideos = new MutableLiveData<>();
-    private final MutableLiveData<List<Review>> observableReviews = new MutableLiveData<>();
     private final MutableLiveData<Boolean> observableLoadingVideosError = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> observableNoVideosAvailable = new MutableLiveData<>();
+    private final SingleLiveEvent<Uri> eventShowVideo = new SingleLiveEvent<>();
+
+    private final MutableLiveData<List<Review>> observableReviews = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> observableNoReviewsAvailable = new MutableLiveData<>();
     private final MutableLiveData<Boolean> observableLoadingReviewsError = new MutableLiveData<>();
 
     private final ObservableField<Boolean> fieldIsFavorite = new ObservableField<>();
-
-    private final SingleLiveEvent<Uri> eventShowVideo = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Boolean> eventAddedToFavorite = new SingleLiveEvent<>();
 
     public MutableLiveData<Movie> getObservableMovie() {
         return observableMovie;
@@ -45,24 +48,32 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
         return observableVideos;
     }
 
-    public MutableLiveData<List<Review>> getObservableReviews() {
-        return observableReviews;
-    }
-
     public MutableLiveData<Boolean> getObservableLoadingVideosError() {
         return observableLoadingVideosError;
+    }
+
+    public SingleLiveEvent<Uri> getEventShowVideo() {
+        return eventShowVideo;
+    }
+
+    public MutableLiveData<List<Review>> getObservableReviews() {
+        return observableReviews;
     }
 
     public MutableLiveData<Boolean> getObservableLoadingReviewsError() {
         return observableLoadingReviewsError;
     }
 
+    public MutableLiveData<Boolean> getObservableNoReviewsAvailable() {
+        return observableNoReviewsAvailable;
+    }
+
     public ObservableField<Boolean> getFieldIsFavorite() {
         return fieldIsFavorite;
     }
 
-    public SingleLiveEvent<Uri> getEventShowVideo() {
-        return eventShowVideo;
+    public SingleLiveEvent<Boolean> getEventAddedToFavorite() {
+        return eventAddedToFavorite;
     }
 
     private CompositeDisposable disposables = new CompositeDisposable();
@@ -91,7 +102,7 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
                             .subscribe(
                                     reviews -> {
                                         observableReviews.setValue(reviews);
-                                        observableLoadingReviewsError.setValue(false);
+                                        observableNoVideosAvailable.setValue(reviews.isEmpty());
                                     },
                                     error -> {
                                         if(error instanceof NoInternetException) {
@@ -113,8 +124,8 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     videos -> {
+                                        observableNoVideosAvailable.setValue(videos.isEmpty());
                                         observableVideos.setValue(videos);
-                                        observableLoadingVideosError.setValue(false);
                                     },
                                     error -> {
                                         if(error instanceof NoInternetException) {
@@ -149,7 +160,11 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
                         favoritesServices.unFavoriteMovie(movie.getId())
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(() -> fieldIsFavorite.set(!isFavorite))
+                                .subscribe(() -> {
+                                            fieldIsFavorite.set(false);
+                                            eventAddedToFavorite.setValue(false);
+                                        }
+                                )
                 );
 
             } else {
@@ -157,7 +172,10 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
                         favoritesServices.favoriteMovie(movie)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(() -> fieldIsFavorite.set(!isFavorite))
+                                .subscribe(() -> {
+                                    fieldIsFavorite.set(true);
+                                    eventAddedToFavorite.setValue(true);
+                                })
                 );
             }
         }
