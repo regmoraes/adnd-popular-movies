@@ -1,6 +1,7 @@
 package com.regmoraes.popularmovies.presentation.detail;
 
 import android.app.Activity;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,9 @@ public final class MovieInfoFragment extends Fragment {
     public MovieDetailsViewModel viewModel;
     private FragmentMovieInfoBinding viewBinding;
     private Toast mToast;
+
+    private String addedToFavoritesText;
+    private String removedFromFavoritesText;
 
     @Nullable
     @Override
@@ -40,6 +44,10 @@ public final class MovieInfoFragment extends Fragment {
             viewModel.getEventAddedToFavorite().observe(getActivity(), this::showAddedToFavorites);
 
             viewBinding.setViewModel(viewModel);
+
+            ContextWrapper contextWrapper = new ContextWrapper(getActivity());
+            addedToFavoritesText = contextWrapper.getString(R.string.movie_added_favorites);
+            removedFromFavoritesText = contextWrapper.getString(R.string.movie_removed_favorites);
         }
     }
 
@@ -48,9 +56,9 @@ public final class MovieInfoFragment extends Fragment {
         if (mToast != null) mToast.cancel();
 
         if(added) {
-            mToast = Toast.makeText(getActivity(), getActivity().getString(R.string.movie_added_favorites), Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(getActivity(), addedToFavoritesText, Toast.LENGTH_SHORT);
         } else {
-            mToast = Toast.makeText(getActivity(), getActivity().getString(R.string.movie_removed_favorites), Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(getActivity(), removedFromFavoritesText, Toast.LENGTH_SHORT);
         }
 
         mToast.show();

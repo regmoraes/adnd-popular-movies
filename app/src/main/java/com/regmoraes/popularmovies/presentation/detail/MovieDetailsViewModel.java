@@ -52,6 +52,10 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
         return observableLoadingVideosError;
     }
 
+    public MutableLiveData<Boolean> getObservableNoVideosAvailable() {
+        return observableNoVideosAvailable;
+    }
+
     public SingleLiveEvent<Uri> getEventShowVideo() {
         return eventShowVideo;
     }
@@ -102,7 +106,7 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
                             .subscribe(
                                     reviews -> {
                                         observableReviews.setValue(reviews);
-                                        observableNoVideosAvailable.setValue(reviews.isEmpty());
+                                        observableNoReviewsAvailable.setValue(reviews.isEmpty());
                                     },
                                     error -> {
                                         if(error instanceof NoInternetException) {

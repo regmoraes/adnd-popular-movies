@@ -16,8 +16,7 @@ import static java.util.Collections.emptyList;
 /**
  * Copyright {2018} {Rômulo Eduardo G. Moraes}
  **/
-public class 
-PopularMoviesManager implements PopularMoviesServices {
+public class PopularMoviesManager implements PopularMoviesServices {
 
     private final MoviesDbRestService moviesDbRestService;
 

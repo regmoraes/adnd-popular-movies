@@ -57,6 +57,7 @@ public final class MovieVideosFragment extends Fragment implements MovieVideosAd
 
             viewModel.getObservableVideos().observe(getActivity(), this::showVideoData);
             viewModel.getObservableLoadingVideosError().observe(getActivity(), this::showVideosLoadingError);
+            viewModel.getObservableNoVideosAvailable().observe(getActivity(), this::showNoVideosAvailable);
             viewModel.getEventShowVideo().observe(getActivity(), this::showVideo);
         }
     }
@@ -69,6 +70,14 @@ public final class MovieVideosFragment extends Fragment implements MovieVideosAd
         if(show != null) {
             viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
             viewBinding.textViewLoadFeedback.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
+
+    private void showNoVideosAvailable(Boolean show) {
+        if(show != null) {
+            viewBinding.recyclerViewReviews.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            viewBinding.textViewLoadFeedback.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            viewBinding.textViewLoadFeedback.setText(R.string.videos_no_videos);
         }
     }
 
