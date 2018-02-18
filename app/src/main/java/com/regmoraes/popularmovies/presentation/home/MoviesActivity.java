@@ -2,12 +2,12 @@ package com.regmoraes.popularmovies.presentation.home;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +36,8 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesCon
     @Inject public MoviesViewModelFactory viewModelFactory;
     private MoviesViewModel viewModel;
     private ActivityMoviesBinding viewBinding;
+
+    private Toolbar toolbar;
 
     private MoviesAdapter mMoviesAdapter;
 
@@ -73,7 +75,8 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesCon
 
     private void setUpToolbar() {
 
-        setSupportActionBar(viewBinding.toolbar);
+        toolbar = (Toolbar) viewBinding.toolbar;
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setSubtitle(R.string.movies_most_popular);
     }
@@ -190,19 +193,19 @@ public final class MoviesActivity extends AppCompatActivity implements MoviesCon
 
             case R.id.action_sort_rating:
                 viewModel.sortByRating();
-                viewBinding.toolbar.setSubtitle(R.string.movies_top_rated);
+                toolbar.setSubtitle(R.string.movies_top_rated);
                 showingFavorites = false;
                 break;
 
             case R.id.action_sort_popularity:
                 viewModel.sortByPopularity();
-                viewBinding.toolbar.setSubtitle(R.string.movies_most_popular);
+                toolbar.setSubtitle(R.string.movies_most_popular);
                 showingFavorites = false;
                 break;
 
             case R.id.action_sort_favorites:
                 viewModel.sortByFavorites();
-                viewBinding.toolbar.setSubtitle(R.string.movies_favorites);
+                toolbar.setSubtitle(R.string.movies_favorites);
                 showingFavorites = true;
                 break;
 

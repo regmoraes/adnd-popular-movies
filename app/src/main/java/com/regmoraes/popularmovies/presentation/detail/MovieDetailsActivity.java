@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -57,7 +58,7 @@ public final class MovieDetailsActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
 
-        setSupportActionBar(viewBinding.toolbar);
+        setSupportActionBar((Toolbar) viewBinding.toolbar);
         getSupportActionBar().setTitle(movie.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
