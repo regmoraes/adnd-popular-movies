@@ -1,4 +1,8 @@
 <resources>
+
+    <string name="action_share_trailer">Share trailer</string>
+    <string name="action_share_chooser_text">Share trailer using</string>
+
     <string name="movie_poster_description">Movie poster</string>
     <string name="movie_video_description">Play icon</string>
 

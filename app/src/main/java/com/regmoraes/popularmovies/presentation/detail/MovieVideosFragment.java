@@ -87,7 +87,9 @@ public final class MovieVideosFragment extends Fragment implements MovieVideosAd
         videoIntent.setAction(ACTION_VIEW);
         videoIntent.setData(videoUri);
 
-        startActivity(videoIntent);
+        if(videoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(videoIntent);
+        }
     }
 
     @Override

@@ -14,6 +14,8 @@ import com.regmoraes.popularmovies.data.model.Video;
 import com.regmoraes.popularmovies.domain.FavoritesServices;
 import com.regmoraes.popularmovies.domain.PopularMoviesServices;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,6 +41,8 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
 
     private final ObservableField<Boolean> fieldIsFavorite = new ObservableField<>();
     private final SingleLiveEvent<Boolean> eventAddedToFavorite = new SingleLiveEvent<>();
+
+    private final SingleLiveEvent<URL> eventShareVideoUri = new SingleLiveEvent<>();
 
     public MutableLiveData<Movie> getObservableMovie() {
         return observableMovie;
@@ -78,6 +82,10 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
 
     public SingleLiveEvent<Boolean> getEventAddedToFavorite() {
         return eventAddedToFavorite;
+    }
+
+    public SingleLiveEvent<URL> getEventShareVideoUri() {
+        return eventShareVideoUri;
     }
 
     private CompositeDisposable disposables = new CompositeDisposable();
@@ -151,6 +159,16 @@ public final class MovieDetailsViewModel extends ViewModel implements MovieVideo
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(isFavorite -> getFieldIsFavorite().set(isFavorite))
             );
+        }
+    }
+
+    public void onShareTrailerClicked() {
+
+        List<Video> videos = getObservableVideos().getValue();
+
+        if(videos != null && videos.size() > 0) {
+            URL videoUrl = VideoUtils.buildVideoUrl(videos.get(0).getKey());
+            eventShareVideoUri.setValue(videoUrl);
         }
     }
 
