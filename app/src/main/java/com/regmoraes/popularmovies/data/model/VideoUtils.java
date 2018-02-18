@@ -1,4 +1,4 @@
-package com.regmoraes.popularmovies.commons;
+package com.regmoraes.popularmovies.data.model;
 
 import android.net.Uri;
 

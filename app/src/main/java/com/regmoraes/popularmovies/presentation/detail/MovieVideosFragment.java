@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,10 +42,15 @@ public final class MovieVideosFragment extends Fragment implements MovieVideosAd
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         reviewsAdapter = new MovieVideosAdapter(this);
 
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(viewBinding.recyclerViewReviews.getContext(),
+                        mLayoutManager.getOrientation());
+
         viewBinding.recyclerViewReviews.setLayoutManager(mLayoutManager);
+        viewBinding.recyclerViewReviews.addItemDecoration(dividerItemDecoration);
         viewBinding.recyclerViewReviews.setAdapter(reviewsAdapter);
     }
 

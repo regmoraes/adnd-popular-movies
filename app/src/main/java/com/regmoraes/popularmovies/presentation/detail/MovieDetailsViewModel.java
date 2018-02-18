@@ -6,7 +6,7 @@ import android.databinding.ObservableField;
 import android.net.Uri;
 
 import com.regmoraes.popularmovies.commons.SingleLiveEvent;
-import com.regmoraes.popularmovies.commons.VideoUtils;
+import com.regmoraes.popularmovies.data.model.VideoUtils;
 import com.regmoraes.popularmovies.data.api.NoInternetException;
 import com.regmoraes.popularmovies.data.model.Movie;
 import com.regmoraes.popularmovies.data.model.Review;
@@ -14,7 +14,6 @@ import com.regmoraes.popularmovies.data.model.Video;
 import com.regmoraes.popularmovies.domain.FavoritesServices;
 import com.regmoraes.popularmovies.domain.PopularMoviesServices;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 

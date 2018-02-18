@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName;
 import com.regmoraes.popularmovies.data.api.ApiUtils;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Copyright {2018} {Rômulo Eduardo G. Moraes}

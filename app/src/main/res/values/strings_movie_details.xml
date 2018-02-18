@@ -17,6 +17,7 @@
     <string name="movie_added_favorites">Added to favorites</string>
     <string name="movie_removed_favorites">Removed from favorites</string>
 
+    <string name="reviews_user_content_description">User photo</string>
     <string name="reviews_no_review">There\'s no reviews for this movie.</string>
     <string name="reviews_loading_error">Connect to the internet to see the reviews.</string>
 

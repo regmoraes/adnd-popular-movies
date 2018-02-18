@@ -32,8 +32,8 @@
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/sv_movie_details"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,6 @@
                     android:layout_marginTop="8dp"
                     android:text="@{viewModel.observableMovie.getValue().title}"
                     android:textAlignment="textStart"
-                    android:textSize="18sp"
                     android:theme="@style/MovieTitle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
@@ -80,7 +79,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="@{@string/movie_rating(viewModel.observableMovie.getValue().voteAverage)}"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                     app:layout_constraintTop_toBottomOf="@+id/tv_movie_release_date"
@@ -94,7 +93,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="12dp"
                     android:text="@{DateUtils.formatReleaseDate(context, viewModel.observableMovie.getValue().releaseDate)}"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                     app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
@@ -102,18 +101,16 @@
 
                 <TextView
                     android:id="@+id/tv_movie_overview"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:text="@{viewModel.observableMovie.getValue().overview}"
                     android:theme="@style/MovieSynopsis"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster"
+                    app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_movie_rating"
                     tools:text="Movie Overview" />
 
             </android.support.constraint.ConstraintLayout>
