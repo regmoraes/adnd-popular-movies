@@ -62,6 +62,8 @@ public class FavoritesManager implements FavoritesServices {
                         }
                     }
 
+                    cursor.close();
+
                     return movies;
                 });
     }
